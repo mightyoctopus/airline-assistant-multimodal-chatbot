@@ -55,3 +55,5 @@ This app supports natural conversations with text to speech, image generation, r
   - llm_clients/claude_client.py
 - UI: 
   - interfaces/gradio_ui.py
+- Entry Point: 
+  - main.py
