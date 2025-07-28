@@ -1,14 +1,14 @@
+from datetime import datetime
 import os
-from llm_clients.openai_client import OpenAIClient
-from llm_clients.claude_client import ClaudeClient
-from PIL import Image
 from io import BytesIO
+from PIL import Image
 import base64
-from pydub import AudioSegment
-from pydub.playback import play
 
 import prompts
 import config.settings
+from utils.utilities import get_current_time
+from llm_clients.openai_client import OpenAIClient
+from llm_clients.claude_client import ClaudeClient
 
 class Agent:
     """
@@ -29,15 +29,17 @@ class Agent:
     ### TTS Text-To-Speech
     def invoke_talker(self, text_response):
         audio_response = self.openai.execute_openai_tts_model(text_response)
-        audio_stream = BytesIO(audio_response.content)
-        audio = AudioSegment.from_file(audio_stream, format="mp3")
-        play(audio)
+
+        filename = f"/tmp/tts_{get_current_time()}.mp3"
+        with open(filename, "wb") as f:
+            f.write(audio_response.content)
+
+        return filename
 
     ### Audio to Text function -- user speech to text output
     def invoke_transcriber (self, audio_file):
         if not audio_file:
             return ""
-
         with open(audio_file, "rb") as audio:
             result = self.openai.execute_openai_transcribe_model(audio)
         ### Remove the temp (audio) file

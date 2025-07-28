@@ -117,7 +117,8 @@ class CoreChat:
             llm_response = self.openai.execute_openai_chat_model(conversation)
 
             reply = llm_response.choices[0].message.content
-            self.agent.invoke_talker(reply)
+            ### Raw audio bytes which is passed to the Audio method in Gradio UI
+            tts_audio_path = self.agent.invoke_talker(reply)
 
             print("BOOKING INFO UPDATED: ", self.last_booking_info)
             ### Booking confirmation -- look for confirmation phrase
@@ -126,8 +127,9 @@ class CoreChat:
                 print("Booking confirmed and added: ", self.booking_list)
                 self.last_booking_info = None
 
-            return reply, image
+            return reply, image, tts_audio_path
 
         reply = llm_response.choices[0].message.content
-        self.agent.invoke_talker(reply)
-        return reply, None
+
+        tts_audio_path = self.agent.invoke_talker(reply)
+        return reply, None, tts_audio_path

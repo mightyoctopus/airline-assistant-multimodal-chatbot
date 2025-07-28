@@ -1,7 +1,6 @@
 import gradio as gr
 import json
 
-import config.settings
 from core.core_chat import CoreChat
 from core.agent import Agent
 import prompts
@@ -29,10 +28,15 @@ class GradioUI:
                     min_width=30
                 )
             with gr.Row():
-                speech = gr.Audio(
+                audio_in = gr.Audio(
                     sources=["microphone"],
                     format="mp3",
                     type="filepath"
+                )
+                audio_out = gr.Audio(
+                    label="Assistant Voice(auto-play)",
+                    type="filepath",
+                    autoplay=True
                 )
                 clear = gr.Button("Reset The Chat")
 
@@ -43,10 +47,10 @@ class GradioUI:
                 queue=False
             ).then(
                 fn= self.bot,
-                inputs= chatbot,
-                outputs=[chatbot, translation_panel, image_output]
+                inputs= [chatbot],
+                outputs=[chatbot, translation_panel, image_output, audio_out]
             )
-            clear.click(lambda: ([], [], None), None, [chatbot, translation_panel, image_output], queue=False)
+            clear.click(lambda: ([], [], None), None, [chatbot, translation_panel, image_output, audio_out], queue=False)
 
             lang_selection.change(
                 fn=self.update_translated_lang,
@@ -54,9 +58,9 @@ class GradioUI:
                 outputs=translation_panel
             )
 
-            speech.change(
+            audio_in.change(
                 fn=self.agent.invoke_transcriber,
-                inputs=speech,
+                inputs=audio_in,
                 outputs=msg
             )
 
@@ -77,7 +81,7 @@ class GradioUI:
 
     def bot(self, history):
         user_input = history[-1][0]
-        bot_message, image = self.core_chat.chat(user_input, history[:-1])
+        bot_message, image, tts_audio_path = self.core_chat.chat(user_input, history[:-1])
         history[-1][1] = bot_message
 
         translated_text = self.agent.invoke_translator(
@@ -89,7 +93,6 @@ class GradioUI:
 
         try:
             translated_list = json.loads(translated_text)
-            print("TRANSLATED JSON LOADS LIST: ", translated_list)
             ### Pull the nested list out to be a normal list
             ### to append the flat list into the translated_text_history variable(list)
             flat_translated_list = translated_list[0]
@@ -97,14 +100,13 @@ class GradioUI:
             flat_translated_list = ["", "Translation failed"]
 
         self.translated_text_history.append(flat_translated_list)
-        print("TRANSLATED TEXT LIST: ", self.translated_text_history)
 
         ### When image is generated, returns the image as well.
         if image:
-            return history, self.translated_text_history, image
+            return history, self.translated_text_history, image, tts_audio_path
         else:
             ## When no image is found, disable the visibility on the image block
-            return history, self.translated_text_history, gr.update(visible=None)
+            return history, self.translated_text_history, gr.update(visible=None), tts_audio_path
 
 
 
