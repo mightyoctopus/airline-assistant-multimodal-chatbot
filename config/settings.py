@@ -13,5 +13,5 @@ OPENAI_CONFIG = {
 
 CLAUDE_CONFIG = {
     "api_key": os.getenv("ANTHROPIC_API_KEY"),
-    "chat_model": "claude-3-5-haiku-latest"
+    "chat_model": "claude-haiku-4-5-20251001"
 }
