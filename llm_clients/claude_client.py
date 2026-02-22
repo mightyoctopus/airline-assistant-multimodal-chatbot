@@ -1,4 +1,5 @@
 from anthropic import Anthropic
+from anthropic.types import MessageParam
 from config.settings import CLAUDE_CONFIG
 
 class ClaudeClient:
@@ -14,18 +15,18 @@ class ClaudeClient:
             max_tokens=1000,
             system=sys_msg,
             messages=[
-                {
-                    "role": "user",
-                    "content": f"""
-                                Translate it to {target_lang} for
-                                the following conversation:
-                                user: {human_msg}
-                                assistant: {chatbot_msg}
-
-                                into a list format. 
-                                For example, 
-                                [[{human_msg} translated, {chatbot_msg} translated]]
-                    """
-                },
+                MessageParam(
+                    role="user",
+                    content=f"""
+                        Translate it to {target_lang} for
+                        the following conversation:
+                        user: {human_msg}
+                        assistant: {chatbot_msg}
+        
+                        into a list format. 
+                        For example, 
+                        [[{human_msg} translated, {chatbot_msg} translated]]
+                    """.strip()
+                )
             ]
         )
