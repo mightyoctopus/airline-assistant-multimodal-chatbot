@@ -31,7 +31,8 @@ class GradioUI:
                 audio_in = gr.Audio(
                     sources=["microphone"],
                     format="mp3",
-                    type="filepath"
+                    type="filepath",
+                    recording=True
                 )
                 audio_out = gr.Audio(
                     label="Assistant Voice(auto-play)",
