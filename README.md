@@ -1,11 +1,16 @@
 # Multimodal Airline Assistant Chatbot
 
-An AI-powered multimodal chatbot that acts as a virtual assistant for airline-related queries and flight bookings. 
-Built with **OpenAI's GPT-4.1 Mini**, **Claude 3.5 haiku**, and other multimodal models(TTS, transcribe model).
+An AI-powered multimodal assistant for airline customer service and flight-related queries.
 
-This app supports natural conversations with text to speech, image generation, real-time audio transcription, and automatic translation into multiple languages.
+The system integrates conversational LLM reasoning with speech input, text-to-speech output, image generation, and multilingual translation to provide an interactive travel assistant experience.
 
 ---
+
+## System Architecture
+![Multi Modal Airline Customer Service Chatbot](assets/Airline%20Chatbot.jpg)
+
+## Demo Video
+https://drive.google.com/file/d/1qrb1FjtkxlTXUutg3jFG2vDpQpxyBXA_/view?usp=sharing  
 
 ## Features
 
@@ -33,15 +38,22 @@ This app supports natural conversations with text to speech, image generation, r
 ## Tech Stack
 
 - **Python 3.10+**
-- **Gradio** – UI framework
-- **OpenAI API** – Chat, Text-To-Speech, Speech-to-Text, and image generation
-- **Anthropic API** - Claude 3.5 Haiku
-- **Tool Functions**(tool calls) – Structured function calling for tasks like booking and pricing
-- **Custom CoreChat Agent System** – Modular class based design for managing tools and logic
+- **Gradio** — interactive UI framework
+- **OpenAI API**
+  - GPT-4.1 Mini (LLM reasoning)
+  - gpt-4o-mini-transcribe (speech recognition)
+  - DALL·E / image generation
+  - Text-to-Speech
+- **Anthropic API**
+  - Claude 3.5 Haiku (translation)
+- **Tool Calling**
+  - structured function calls for booking, pricing, and company information
+- **Custom CoreChat Agent System**
+  - modular architecture for tool routing and LLM orchestration
 
 ---
 
-## 🗂️ Project Structure(Main Files)
+## Project Structure
 - Core Chat Logic: 
   - core/core_chat.py 
 - Multimodal Agents: 
